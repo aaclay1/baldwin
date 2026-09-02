@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baldwin Insurance - Customer Information</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%); color: white; padding: 30px; text-align: center; }
+        .header img { height: 50px; margin-bottom: 10px; }
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .content { padding: 40px; }
+        .progress { background: #e0e0e0; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, #8B0000 0%, #A61F1F 100%); height: 100%; transition: width 0.3s; }
+        .step-info { text-align: center; color: #666; margin-bottom: 20px; font-size: 14px; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .section-title { font-size: 22px; color: #8B0000; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #A61F1F; }
+        .section-subtitle { font-size: 14px; color: #666; margin: 20px 0 15px 0; font-weight: bold; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #A61F1F; box-shadow: 0 0 0 3px rgba(166, 31, 31, 0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+        .checkbox-group, .radio-group { margin: 15px 0; }
+        .checkbox-item, .radio-item { margin: 8px 0; }
+        .checkbox-item input, .radio-item input { margin-right: 8px; }
+        .checkbox-item label, .radio-item label { display: inline; font-weight: normal; }
+        .table-section { margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: #f9f9f9; }
+        .table-header { background: #8B0000; color: white; padding: 12px; margin: -15px -15px 15px -15px; border-radius: 4px 4px 0 0; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        th { background: #e0e0e0; padding: 10px; text-align: left; font-weight: bold; color: #333; border: 1px solid #ddd; font-size: 13px; }
+        td { padding: 10px; border: 1px solid #ddd; }
+        td input, td select { width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
+        .add-row-btn { background: #A61F1F; color: white; padding: 8px 16px; border: none; border-radius: 3px; cursor: pointer; font-size: 13px; margin-top: 10px; }
+        .add-row-btn:hover { background: #8B0000; }
+        .remove-row-btn { background: #dc3545; color: white; padding: 4px 10px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .remove-row-btn:hover { background: #c82333; }
+        .buttons { display: flex; gap: 10px; margin-top: 30px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #8B0000; color: white; flex: 1; }
+        .btn-primary:hover { background: #A61F1F; }
+        .btn-secondary { background: #ccc; color: #333; }
+        .btn-secondary:hover { background: #bbb; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .success-page { text-align: center; padding: 40px; }
+        .success-page .icon { font-size: 60px; margin-bottom: 20px; }
+        .success-page h2 { color: #27ae60; font-size: 28px; margin-bottom: 15px; }
+        .success-page p { color: #666; font-size: 16px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="baldwin-logo.png" alt="Baldwin Insurance">
+            <h1>Baldwin Insurance</h1>
+            <p>Customer Information Form</p>
+            <p style="font-size: 12px; margin-top: 10px;">Please provide your information to continue</p>
+            <p><a href="https://www.baldwininsuranceagency.com/quote/" style="color: white; text-decoration: underline;">Visit baldwininsuranceagency.com</a></p>
+        </div>
+
+        <div class="content">
+            <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+            <div class="step-info" id="stepIndicator">Step 1 of 7</div>
+
+            <!-- Step 1: Personal Information -->
+            <div class="form-section active" id="step1">
+                <div class="section-title">Step 1: Personal Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Primary Phone *</label>
+                        <input type="tel" id="phone1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Phone</label>
+                        <input type="tel" id="phone2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+            </div>
+
+            <!-- Step 2: Address Information -->
+            <div class="form-section" id="step2">
+                <div class="section-title">Step 2: Address Information</div>
+                
+                <div class="section-subtitle">Mailing Address</div>
+                <div class="form-group">
+                    <label>Street Address *</label>
+                    <input type="text" id="mailing_street" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="mailing_city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="mailing_state" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ZIP Code *</label>
+                        <input type="text" id="mailing_zip" required>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Physical Address (where home is located)</div>
+                <div class="form-group">
+                    <label>Street Address *</label>
+                    <input type="text" id="physical_street" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="physical_city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="physical_state" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ZIP Code *</label>
+                        <input type="text" id="physical_zip" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Own / Rent? *</label>
+                        <select id="own_rent" required>
+                            <option value="">-- Select --</option>
+                            <option value="Home">Home</option>
+                            <option value="Apt">Apt</option>
+                            <option value="Condo">Condo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>County *</label>
+                        <input type="text" id="county" required>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Previous Address (if less than 3 years)</div>
+                <div class="form-group">
+                    <label>Street Address</label>
+                    <input type="text" id="previous_address">
+                </div>
+            </div>
+
+            <!-- Step 3: Employment Information -->
+            <div class="form-section" id="step3">
+                <div class="section-title">Step 3: Employment Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Occupation</label>
+                        <input type="text" id="occupation">
+                    </div>
+                    <div class="form-group">
+                        <label>Employer</label>
+                        <input type="text" id="employer">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Number of Years with Employer</label>
+                    <input type="text" id="years_employed">
+                </div>
+            </div>
+
+            <!-- Step 4: Household Members -->
+            <div class="form-section" id="step4">
+                <div class="section-title">Step 4: Household Members</div>
+                <div class="table-section">
+                    <div class="table-header">Add household members (up to 4)</div>
+                    <table id="householdTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date of Birth</th>
+                                <th>SSN / Tax ID</th>
+                                <th>Driver's License #</th>
+                                <th>State</th>
+                                <th>Marital Status</th>
+                                <th>Relationship</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="householdBody">
+                            <tr data-row="0">
+                                <td><input type="text" class="household-name"></td>
+                                <td><input type="date" class="household-dob"></td>
+                                <td><input type="text" class="household-ssn" placeholder="XXX-XX-XXXX"></td>
+                                <td><input type="text" class="household-dl"></td>
+                                <td><input type="text" class="household-state" maxlength="2"></td>
+                                <td><select class="household-mar"><option value="">Select</option><option value="Single">Single</option><option value="Married">Married</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select></td>
+                                <td><input type="text" class="household-rel" placeholder="e.g., Spouse, Child"></td>
+                                <td><button class="remove-row-btn" onclick="removeHousehold(0)" style="display:none;">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-row-btn" onclick="addHousehold()">+ Add Household Member</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Drivers & Vehicles -->
+            <div class="form-section" id="step5">
+                <div class="section-title">Step 5: Drivers & Vehicles</div>
+                <div class="table-section">
+                    <div class="table-header">Add drivers and vehicles</div>
+                    <table id="driversTable">
+                        <thead>
+                            <tr>
+                                <th>Driver Name</th>
+                                <th>Year/Make/Model</th>
+                                <th>VIN</th>
+                                <th>Use</th>
+                                <th>Annual Mileage</th>
+                                <th>Good Student?</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="driversBody">
+                            <tr data-row="0">
+                                <td><input type="text" class="driver-name"></td>
+                                <td><input type="text" class="driver-vehicle"></td>
+                                <td><input type="text" class="driver-vin" placeholder="VIN"></td>
+                                <td><select class="driver-use"><option value="">Select</option><option value="Commute">Commute</option><option value="Pleasure">Pleasure</option><option value="Business">Business</option><option value="Farm">Farm</option></select></td>
+                                <td><input type="number" class="driver-mileage"></td>
+                                <td><select class="driver-good-student"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></td>
+                                <td><button class="remove-row-btn" onclick="removeDriver(0)" style="display:none;">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-row-btn" onclick="addDriver()">+ Add Driver/Vehicle</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Coverage & Insurance History -->
+            <div class="form-section" id="step6">
+                <div class="section-title">Step 6: Coverage & Insurance</div>
+                
+                <div class="section-subtitle">Current Insurance</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Currently Insured?</label>
+                        <select id="currently_insured">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Insurance Company</label>
+                        <input type="text" id="current_company">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Policy #</label>
+                        <input type="text" id="policy_number">
+                    </div>
+                    <div class="form-group">
+                        <label>Expiration Date</label>
+                        <input type="date" id="policy_exp_date">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Years with Current Company</label>
+                        <input type="text" id="years_current_company">
+                    </div>
+                    <div class="form-group">
+                        <label>Premium (if known)</label>
+                        <input type="number" id="premium" step="0.01">
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Coverage Information</div>
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Bodily Injury / Property Damage Limits</label>
+                        <select id="coverage_bodily">
+                            <option value="">-- Select --</option>
+                            <option value="25/50">$25,000 / $50,000</option>
+                            <option value="50/100">$50,000 / $100,000</option>
+                            <option value="100/300">$100,000 / $300,000</option>
+                            <option value="250/500">$250,000 / $500,000</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Uninsured Motorist</label>
+                        <select id="coverage_uninsured">
+                            <option value="">-- Select --</option>
+                            <option value="25/50">$25,000 / $50,000</option>
+                            <option value="50/100">$50,000 / $100,000</option>
+                            <option value="100/300">$100,000 / $300,000</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Medical Payments</label>
+                        <input type="text" id="coverage_medical">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="towing_roadside">
+                        <label for="towing_roadside">Towing/Roadside</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="rental">
+                        <label for="rental">Rental</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="loan_lease">
+                        <label for="loan_lease">Loan/Lease</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Claims & Legal History -->
+            <div class="form-section" id="step7">
+                <div class="section-title">Step 7: Claims & Legal History</div>
+                
+                <div class="form-group">
+                    <label>Any accidents or violations in last 5 years?</label>
+                    <textarea id="accidents_violations" rows="4" placeholder="Describe any accidents, tickets, or violations..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Has any driver had their license suspended or revoked?</label>
+                    <select id="license_suspended">
+                        <option value="">-- Select --</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>If yes to suspension, please describe:</label>
+                    <textarea id="suspension_details" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Any felony convictions?</label>
+                    <select id="felony_convictions">
+                        <option value="">-- Select --</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea id="additional_notes" rows="4" placeholder="Any other information you'd like us to know..."></textarea>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">Lien Holder Information (if applicable)</div>
+                <div class="form-group">
+                    <label>Lien Holder Name</label>
+                    <input type="text" id="lienholder_name">
+                </div>
+                <div class="form-group">
+                    <label>Lien Holder Address</label>
+                    <input type="text" id="lienholder_address">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="lienholder_city">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="lienholder_state" maxlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label>ZIP</label>
+                        <input type="text" id="lienholder_zip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Loan #</label>
+                    <input type="text" id="loan_number">
+                </div>
+            </div>
+
+            <!-- Success Page -->
+            <div class="form-section" id="successStep">
+                <div class="success-page">
+                    <div class="icon">✓</div>
+                    <h2>Thank You!</h2>
+                    <p>Your information has been submitted successfully.</p>
+                    <p>We'll review your information and contact you shortly with a quote.</p>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display:none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitForm()" style="display:none; background: #27ae60;">Submit Form</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Token validation
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (!token) {
+            document.body.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #f5f5f5;"><div style="text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"><h2 style="color: #8B0000; margin-bottom: 20px;">Access Denied</h2><p>No valid invitation token found. Please check your email for the correct link.</p></div></div>';
+            throw new Error('No token');
+        }
+
+        let currentStep = 1;
+        let totalSteps = 7;
+        let formData = { form_type: 'customer', token: token };
+
+        function updateView() {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            if (currentStep <= totalSteps) {
+                document.getElementById('step' + currentStep).classList.add('active');
+                const progress = (currentStep / totalSteps) * 100;
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('stepIndicator').textContent = `Step ${currentStep} of ${totalSteps}`;
+                document.getElementById('prevBtn').style.display = currentStep > 1 ? 'block' : 'none';
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            } else {
+                document.getElementById('successStep').classList.add('active');
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('stepIndicator').textContent = 'Submission Complete';
+                document.getElementById('prevBtn').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+            } else if (currentStep === totalSteps) {
+                saveFormData();
+                submitForm();
+                return;
+            }
+            updateView();
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+            }
+            updateView();
+        }
+
+        function saveFormData() {
+            // Personal Info
+            formData.name = document.getElementById('name').value;
+            formData.dob = document.getElementById('dob').value;
+            formData.email = document.getElementById('email').value;
+            formData.phone1 = document.getElementById('phone1').value;
+            formData.phone2 = document.getElementById('phone2').value;
+
+            // Address Info
+            formData.mailing_street = document.getElementById('mailing_street').value;
+            formData.mailing_city = document.getElementById('mailing_city').value;
+            formData.mailing_state = document.getElementById('mailing_state').value;
+            formData.mailing_zip = document.getElementById('mailing_zip').value;
+            formData.physical_street = document.getElementById('physical_street').value;
+            formData.physical_city = document.getElementById('physical_city').value;
+            formData.physical_state = document.getElementById('physical_state').value;
+            formData.physical_zip = document.getElementById('physical_zip').value;
+            formData.own_rent = document.getElementById('own_rent').value;
+            formData.county = document.getElementById('county').value;
+            formData.previous_address = document.getElementById('previous_address').value;
+
+            // Employment
+            formData.occupation = document.getElementById('occupation').value;
+            formData.employer = document.getElementById('employer').value;
+            formData.years_employed = document.getElementById('years_employed').value;
+
+            // Household
+            formData.household_members = [];
+            document.querySelectorAll('#householdBody tr').forEach(row => {
+                const cells = row.querySelectorAll('input, select');
+                if (cells[0].value) {
+                    formData.household_members.push({
+                        name: cells[0].value,
+                        dob: cells[1].value,
+                        ssn: cells[2].value,
+                        dl: cells[3].value,
+                        state: cells[4].value,
+                        marital_status: cells[5].value,
+                        relationship: cells[6].value
+                    });
+                }
+            });
+
+            // Drivers
+            formData.drivers = [];
+            document.querySelectorAll('#driversBody tr').forEach(row => {
+                const cells = row.querySelectorAll('input, select');
+                if (cells[0].value) {
+                    formData.drivers.push({
+                        name: cells[0].value,
+                        vehicle: cells[1].value,
+                        vin: cells[2].value,
+                        use: cells[3].value,
+                        mileage: cells[4].value,
+                        good_student: cells[5].value
+                    });
+                }
+            });
+
+            // Insurance & Coverage
+            formData.currently_insured = document.getElementById('currently_insured').value;
+            formData.current_company = document.getElementById('current_company').value;
+            formData.policy_number = document.getElementById('policy_number').value;
+            formData.policy_exp_date = document.getElementById('policy_exp_date').value;
+            formData.years_current_company = document.getElementById('years_current_company').value;
+            formData.premium = document.getElementById('premium').value;
+            formData.coverage_bodily = document.getElementById('coverage_bodily').value;
+            formData.coverage_uninsured = document.getElementById('coverage_uninsured').value;
+            formData.coverage_medical = document.getElementById('coverage_medical').value;
+            formData.towing_roadside = document.getElementById('towing_roadside').checked;
+            formData.rental = document.getElementById('rental').checked;
+            formData.loan_lease = document.getElementById('loan_lease').checked;
+
+            // Claims & Legal
+            formData.accidents_violations = document.getElementById('accidents_violations').value;
+            formData.license_suspended = document.getElementById('license_suspended').value;
+            formData.suspension_details = document.getElementById('suspension_details').value;
+            formData.felony_convictions = document.getElementById('felony_convictions').value;
+            formData.additional_notes = document.getElementById('additional_notes').value;
+
+            // Lien Holder
+            formData.lienholder_name = document.getElementById('lienholder_name').value;
+            formData.lienholder_address = document.getElementById('lienholder_address').value;
+            formData.lienholder_city = document.getElementById('lienholder_city').value;
+            formData.lienholder_state = document.getElementById('lienholder_state').value;
+            formData.lienholder_zip = document.getElementById('lienholder_zip').value;
+            formData.loan_number = document.getElementById('loan_number').value;
+        }
+
+        async function submitForm() {
+            saveFormData();
+            try {
+                const response = await fetch('submit_form.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentStep = totalSteps + 1;
+                    updateView();
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Error submitting form: ' + e);
+            }
+        }
+
+        function addHousehold() {
+            const rows = document.querySelectorAll('#householdBody tr').length;
+            if (rows >= 4) {
+                alert('Maximum 4 household members');
+                return;
+            }
+            const table = document.getElementById('householdBody');
+            const newRow = table.rows[0].cloneNode(true);
+            newRow.dataset.row = rows;
+            newRow.querySelectorAll('input, select').forEach(el => el.value = '');
+            const removeBtn = newRow.querySelector('.remove-row-btn');
+            removeBtn.style.display = 'block';
+            removeBtn.onclick = () => removeHousehold(rows);
+            table.appendChild(newRow);
+        }
+
+        function removeHousehold(index) {
+            const row = document.querySelector(`#householdBody tr[data-row="${index}"]`);
+            if (row) row.remove();
+        }
+
+        function addDriver() {
+            const table = document.getElementById('driversBody');
+            const rows = table.querySelectorAll('tr').length;
+            const newRow = table.rows[0].cloneNode(true);
+            newRow.dataset.row = rows;
+            newRow.querySelectorAll('input, select').forEach(el => el.value = '');
+            const removeBtn = newRow.querySelector('.remove-row-btn');
+            removeBtn.style.display = 'block';
+            removeBtn.onclick = () => removeDriver(rows);
+            table.appendChild(newRow);
+        }
+
+        function removeDriver(index) {
+            const row = document.querySelector(`#driversBody tr[data-row="${index}"]`);
+            if (row) row.remove();
+        }
+
+        updateView();
+    </script>
+</body>
+</html>

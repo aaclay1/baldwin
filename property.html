@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baldwin Insurance - Property Information</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%); color: white; padding: 30px; text-align: center; }
+        .header img { height: 50px; margin-bottom: 10px; }
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .content { padding: 40px; }
+        .progress { background: #e0e0e0; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, #8B0000 0%, #A61F1F 100%); height: 100%; transition: width 0.3s; }
+        .step-info { text-align: center; color: #666; margin-bottom: 20px; font-size: 14px; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .section-title { font-size: 22px; color: #8B0000; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #A61F1F; }
+        .section-subtitle { font-size: 14px; color: #666; margin: 20px 0 15px 0; font-weight: bold; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #A61F1F; box-shadow: 0 0 0 3px rgba(166, 31, 31, 0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+        .form-row.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .checkbox-group, .radio-group { margin: 15px 0; }
+        .checkbox-item, .radio-item { margin: 8px 0; }
+        .checkbox-item input, .radio-item input { margin-right: 8px; }
+        .checkbox-item label, .radio-item label { display: inline; font-weight: normal; margin-right: 20px; }
+        .buttons { display: flex; gap: 10px; margin-top: 30px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #8B0000; color: white; flex: 1; }
+        .btn-primary:hover { background: #A61F1F; }
+        .btn-secondary { background: #ccc; color: #333; }
+        .btn-secondary:hover { background: #bbb; }
+        .success-page { text-align: center; padding: 40px; }
+        .success-page .icon { font-size: 60px; margin-bottom: 20px; }
+        .success-page h2 { color: #27ae60; font-size: 28px; margin-bottom: 15px; }
+        .success-page p { color: #666; font-size: 16px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="baldwin-logo.png" alt="Baldwin Insurance">
+            <h1>Baldwin Insurance</h1>
+            <p>Property Information Form</p>
+            <p style="font-size: 12px; margin-top: 10px;">Please provide your information to continue</p>
+            <p><a href="https://www.baldwininsuranceagency.com/quote/" style="color: white; text-decoration: underline;">Visit baldwininsuranceagency.com</a></p>
+        </div>
+
+        <div class="content">
+            <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+            <div class="step-info" id="stepIndicator">Step 1 of 7</div>
+
+            <!-- Step 1: Property Type & Location -->
+            <div class="form-section active" id="step1">
+                <div class="section-title">Step 1: Property Type & Location</div>
+                
+                <div class="section-subtitle">Property Type</div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_primary" value="Primary Home">
+                        <label for="prop_primary">Primary Home</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_secondary" value="Secondary Home">
+                        <label for="prop_secondary">Secondary Home</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_seasonal" value="Seasonal">
+                        <label for="prop_seasonal">Seasonal</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_rental" value="Rental">
+                        <label for="prop_rental">Rental</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_renters" value="Renters">
+                        <label for="prop_renters">Renters</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" name="property_type" id="prop_vacant" value="Vacant">
+                        <label for="prop_vacant">Vacant</label>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Location Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>In City Limits?</label>
+                        <select id="in_city_limits">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Feet from Hydrant</label>
+                        <input type="number" id="ft_from_hydrant">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Water Source</label>
+                        <input type="text" id="water_source">
+                    </div>
+                    <div class="form-group">
+                        <label>Acres</label>
+                        <input type="number" id="acres" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Miles from Fire Department</label>
+                        <input type="number" id="miles_from_fd" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Home Basics -->
+            <div class="form-section" id="step2">
+                <div class="section-title">Step 2: Home Basics</div>
+                
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Year Built</label>
+                        <input type="number" id="year_built" min="1800" max="2099">
+                    </div>
+                    <div class="form-group">
+                        <label>Square Footage</label>
+                        <input type="number" id="sq_footage">
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Stories</label>
+                        <input type="number" id="num_stories" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Roof Material</label>
+                        <select id="roof_material">
+                            <option value="">-- Select --</option>
+                            <option value="Asphalt Shingles">Asphalt Shingles</option>
+                            <option value="Wood Shakes">Wood Shakes</option>
+                            <option value="Tile">Tile</option>
+                            <option value="Metal">Metal</option>
+                            <option value="Slate">Slate</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Roof Layers</label>
+                        <select id="roof_layers">
+                            <option value="">-- Select --</option>
+                            <option value="1">1 Layer</option>
+                            <option value="2">2 Layers</option>
+                            <option value="3+">3+ Layers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Exterior Covering</label>
+                        <select id="exterior_covering">
+                            <option value="">-- Select --</option>
+                            <option value="Brick">Brick</option>
+                            <option value="Wood Siding">Wood Siding</option>
+                            <option value="Vinyl Siding">Vinyl Siding</option>
+                            <option value="Stucco">Stucco</option>
+                            <option value="Stone">Stone</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Bathrooms</label>
+                        <input type="number" id="num_bathrooms" step="0.5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Home Details -->
+            <div class="form-section" id="step3">
+                <div class="section-title">Step 3: Home Details</div>
+                
+                <div class="section-subtitle">Climate Control & Utilities</div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="central_heat">
+                        <label for="central_heat">Central Heat: Yes / No</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="central_air">
+                        <label for="central_air">Central Air: Yes / No</label>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Structural Features</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Basement</label>
+                        <select id="basement">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>If yes, Total Basement Sq. Ft.</label>
+                        <input type="number" id="basement_sqft">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Finished Basement Sq. Ft.</label>
+                        <input type="number" id="finished_basement_sqft">
+                    </div>
+                    <div class="form-group">
+                        <label>Walkout Basement?</label>
+                        <select id="walkout_basement">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Circuit Breakers</label>
+                        <select id="circuit_breakers">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Wood Burning Stove</label>
+                        <select id="wood_stove">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>If yes, Type:</label>
+                        <input type="text" id="stove_type" placeholder="Free-standing, Built-in, etc.">
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Garage & Outdoor Structures</div>
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Number of Car Garage</label>
+                        <select id="garage_cars">
+                            <option value="">-- Select --</option>
+                            <option value="0">0 Cars</option>
+                            <option value="1">1 Car</option>
+                            <option value="2">2 Cars</option>
+                            <option value="3">3 Cars</option>
+                            <option value="4+">4+ Cars</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Garage Type</label>
+                        <select id="garage_type">
+                            <option value="">-- Select --</option>
+                            <option value="Attached">Attached</option>
+                            <option value="Detached">Detached</option>
+                            <option value="Built-In">Built-In</option>
+                            <option value="Carport">Carport</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subterranean Garage?</label>
+                        <select id="subterranean_garage">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Deck Sq. Ft.</label>
+                        <input type="number" id="deck_sqft">
+                    </div>
+                    <div class="form-group">
+                        <label>Patio Sq. Ft.</label>
+                        <input type="number" id="patio_sqft">
+                    </div>
+                    <div class="form-group">
+                        <label>Open Porch(s) Sq. Ft.</label>
+                        <input type="number" id="porch_sqft">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Enclosed/Screened Porch Sq. Ft.</label>
+                    <input type="text" id="enclosed_porch_sqft">
+                </div>
+            </div>
+
+            <!-- Step 4: Special Features & Hazards -->
+            <div class="form-section" id="step4">
+                <div class="section-title">Step 4: Special Features & Hazards</div>
+                
+                <div class="section-subtitle">Water Features</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Swimming Pool?</label>
+                        <select id="swimming_pool">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>If yes, Pool Type</label>
+                        <select id="pool_type">
+                            <option value="">-- Select --</option>
+                            <option value="Above Ground">Above Ground</option>
+                            <option value="In-Ground">In-Ground</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Pool Depth (ft)</label>
+                        <input type="number" id="pool_depth" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Pool Size (Sq. Ft.)</label>
+                        <input type="number" id="pool_sqft">
+                    </div>
+                    <div class="form-group">
+                        <label>Type of Liner</label>
+                        <select id="pool_liner">
+                            <option value="">-- Select --</option>
+                            <option value="Vinyl">Vinyl</option>
+                            <option value="Concrete">Concrete</option>
+                            <option value="Fiberglass">Fiberglass</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pool_slide">
+                        <label for="pool_slide">Slide</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="pool_diving">
+                        <label for="pool_diving">Diving Board</label>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Outdoor Hazards & Features</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Trampoline?</label>
+                        <select id="trampoline">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>If yes, Fenced?</label>
+                        <select id="trampoline_fenced">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Yard Fenced?</label>
+                        <select id="yard_fenced">
+                            <option value="">-- Select --</option>
+                            <option value="No">No</option>
+                            <option value="Under 4'">Under 4'</option>
+                            <option value="4' to 6'">4' to 6'</option>
+                            <option value="Over 6'">Over 6'</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fence Type</label>
+                        <input type="text" id="fence_type" placeholder="e.g., Wood, Chain-link">
+                    </div>
+                    <div class="form-group">
+                        <label></label>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Animals & Exotic Pets</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Animals or Exotic Pets?</label>
+                        <select id="animals">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>If yes, Type:</label>
+                        <input type="text" id="animal_type" placeholder="Describe animals">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vicious Tendencies?</label>
+                        <select id="vicious_tendencies">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Livestock?</label>
+                        <select id="livestock">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Animals</label>
+                        <input type="number" id="livestock_count">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Outbuildings</label>
+                    <textarea id="outbuildings" rows="3" placeholder="Describe any outbuildings (sheds, barns, etc.)"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 5: Systems & Updates -->
+            <div class="form-section" id="step5">
+                <div class="section-title">Step 5: Home Systems & Updates</div>
+                
+                <div class="section-subtitle">Alarm & Safety Systems</div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="alarm_fire">
+                        <label for="alarm_fire">Fire Alarm</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="alarm_burglar">
+                        <label for="alarm_burglar">Burglar Alarm</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="alarm_local">
+                        <label for="alarm_local">Local Alarm</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="alarm_central">
+                        <label for="alarm_central">Central Alarm</label>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="protection_smoke">
+                        <label for="protection_smoke">Smoke Detectors</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="protection_fire_ext">
+                        <label for="protection_fire_ext">Fire Extinguishers</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="protection_deadbolts">
+                        <label for="protection_deadbolts">Deadbolts</label>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Fireplace & Chimney</div>
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Fireplace</label>
+                        <select id="fireplace">
+                            <option value="">-- Select --</option>
+                            <option value="Gas">Gas</option>
+                            <option value="Wood">Wood</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Chimneys</label>
+                        <input type="number" id="num_chimneys">
+                    </div>
+                    <div class="form-group">
+                        <label>Chimney Cleaned Annually?</label>
+                        <select id="chimney_cleaned">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">System Updates (Check all that apply)</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Electric Updates</label>
+                        <select id="electric_update">
+                            <option value="">-- Select --</option>
+                            <option value="Full">Full</option>
+                            <option value="Partial">Partial</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Updated (if applicable)</label>
+                        <input type="date" id="electric_date">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Plumbing Updates</label>
+                        <select id="plumbing_update">
+                            <option value="">-- Select --</option>
+                            <option value="Full">Full</option>
+                            <option value="Partial">Partial</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Updated (if applicable)</label>
+                        <input type="date" id="plumbing_date">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Heat/HVAC Updates</label>
+                        <select id="heat_update">
+                            <option value="">-- Select --</option>
+                            <option value="Full">Full</option>
+                            <option value="Partial">Partial</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Updated (if applicable)</label>
+                        <input type="date" id="heat_date">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Roof Updates</label>
+                        <select id="roof_update">
+                            <option value="">-- Select --</option>
+                            <option value="Full">Full</option>
+                            <option value="Partial">Partial</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Updated (if applicable)</label>
+                        <input type="date" id="roof_date">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Insurance & Coverage -->
+            <div class="form-section" id="step6">
+                <div class="section-title">Step 6: Current Insurance & Coverage</div>
+                
+                <div class="section-subtitle">Current Coverage</div>
+                <div class="form-group">
+                    <label>Dwelling Limit</label>
+                    <input type="text" id="dwelling_limit">
+                </div>
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Medical Payments</label>
+                        <input type="text" id="med_pay">
+                    </div>
+                    <div class="form-group">
+                        <label>Other Structure</label>
+                        <input type="text" id="other_structure">
+                    </div>
+                    <div class="form-group">
+                        <label>Personal Property</label>
+                        <input type="text" id="personal_property">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Current Liability Limit</label>
+                        <input type="text" id="liability_limit">
+                    </div>
+                    <div class="form-group">
+                        <label>Current Deductible</label>
+                        <input type="text" id="current_deductible">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Loss of Use</label>
+                    <input type="text" id="loss_of_use">
+                </div>
+
+                <div class="section-subtitle">Current Insurance Company</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Insurance Company</label>
+                        <input type="text" id="insurance_company">
+                    </div>
+                    <div class="form-group">
+                        <label>Policy Number</label>
+                        <input type="text" id="ins_policy_number">
+                    </div>
+                </div>
+
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Expiration Date</label>
+                        <input type="date" id="ins_exp_date">
+                    </div>
+                    <div class="form-group">
+                        <label>Premium</label>
+                        <input type="number" id="ins_premium" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Years with Company</label>
+                        <input type="text" id="ins_years_company">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Protection Class</label>
+                    <input type="text" id="protection_class">
+                </div>
+            </div>
+
+            <!-- Step 7: Mortgagee & History -->
+            <div class="form-section" id="step7">
+                <div class="section-title">Step 7: Financial & History Information</div>
+                
+                <div class="section-subtitle">Mortgagee Information</div>
+                <div class="form-group">
+                    <label>Mortgagee Clause</label>
+                    <input type="text" id="mortgagee_clause">
+                </div>
+                <div class="form-group">
+                    <label>Name of Mortgagee</label>
+                    <input type="text" id="mortgagee_name">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="mortgagee_address">
+                </div>
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="mortgagee_city">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="mortgagee_state" maxlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label>ZIP</label>
+                        <input type="text" id="mortgagee_zip">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Loan #</label>
+                        <input type="text" id="mortgagee_loan">
+                    </div>
+                    <div class="form-group">
+                        <label>Escrow Account?</label>
+                        <select id="escrow_account">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bill to Mortgagee?</label>
+                        <select id="bill_mortgagee">
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-subtitle">Claims & Legal History</div>
+                <div class="form-group">
+                    <label>Bankruptcy or Felony in last 5 years?</label>
+                    <select id="bankruptcy_felony">
+                        <option value="">-- Select --</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>If yes, when and why?</label>
+                    <textarea id="bankruptcy_details" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Losses in last 5 years?</label>
+                    <select id="losses_5yr">
+                        <option value="">-- Select --</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>If yes, describe date and loss amount:</label>
+                    <textarea id="losses_details" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Business Use of Home?</label>
+                    <textarea id="business_use" rows="3" placeholder="Describe any business activities in home..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Notes or Special Circumstances</label>
+                    <textarea id="property_notes" rows="4" placeholder="Any other information..."></textarea>
+                </div>
+            </div>
+
+            <!-- Success Page -->
+            <div class="form-section" id="successStep">
+                <div class="success-page">
+                    <div class="icon">✓</div>
+                    <h2>Thank You!</h2>
+                    <p>Your information has been submitted successfully.</p>
+                    <p>We'll review your information and contact you shortly with a quote.</p>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display:none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitForm()" style="display:none; background: #27ae60;">Submit Form</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Token validation
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (!token) {
+            document.body.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #f5f5f5;"><div style="text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"><h2 style="color: #8B0000; margin-bottom: 20px;">Access Denied</h2><p>No valid invitation token found. Please check your email for the correct link.</p></div></div>';
+            throw new Error('No token');
+        }
+
+        let currentStep = 1;
+        let totalSteps = 7;
+        let formData = { form_type: 'property', token: token };
+
+        function updateView() {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            if (currentStep <= totalSteps) {
+                document.getElementById('step' + currentStep).classList.add('active');
+                const progress = (currentStep / totalSteps) * 100;
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('stepIndicator').textContent = `Step ${currentStep} of ${totalSteps}`;
+                document.getElementById('prevBtn').style.display = currentStep > 1 ? 'block' : 'none';
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            } else {
+                document.getElementById('successStep').classList.add('active');
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('stepIndicator').textContent = 'Submission Complete';
+                document.getElementById('prevBtn').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+            } else if (currentStep === totalSteps) {
+                saveFormData();
+                submitForm();
+                return;
+            }
+            updateView();
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+            }
+            updateView();
+        }
+
+        function saveFormData() {
+            // Step 1: Property Type & Location
+            formData.property_type = document.querySelector('input[name="property_type"]:checked')?.value || '';
+            formData.in_city_limits = document.getElementById('in_city_limits').value;
+            formData.ft_from_hydrant = document.getElementById('ft_from_hydrant').value;
+            formData.water_source = document.getElementById('water_source').value;
+            formData.acres = document.getElementById('acres').value;
+            formData.miles_from_fd = document.getElementById('miles_from_fd').value;
+
+            // Step 2: Home Basics
+            formData.year_built = document.getElementById('year_built').value;
+            formData.sq_footage = document.getElementById('sq_footage').value;
+            formData.num_stories = document.getElementById('num_stories').value;
+            formData.roof_material = document.getElementById('roof_material').value;
+            formData.roof_layers = document.getElementById('roof_layers').value;
+            formData.exterior_covering = document.getElementById('exterior_covering').value;
+            formData.num_bathrooms = document.getElementById('num_bathrooms').value;
+
+            // Step 3: Home Details
+            formData.central_heat = document.getElementById('central_heat').checked;
+            formData.central_air = document.getElementById('central_air').checked;
+            formData.basement = document.getElementById('basement').value;
+            formData.basement_sqft = document.getElementById('basement_sqft').value;
+            formData.finished_basement_sqft = document.getElementById('finished_basement_sqft').value;
+            formData.walkout_basement = document.getElementById('walkout_basement').value;
+            formData.circuit_breakers = document.getElementById('circuit_breakers').value;
+            formData.wood_stove = document.getElementById('wood_stove').value;
+            formData.stove_type = document.getElementById('stove_type').value;
+            formData.garage_cars = document.getElementById('garage_cars').value;
+            formData.garage_type = document.getElementById('garage_type').value;
+            formData.subterranean_garage = document.getElementById('subterranean_garage').value;
+            formData.deck_sqft = document.getElementById('deck_sqft').value;
+            formData.patio_sqft = document.getElementById('patio_sqft').value;
+            formData.porch_sqft = document.getElementById('porch_sqft').value;
+            formData.enclosed_porch_sqft = document.getElementById('enclosed_porch_sqft').value;
+
+            // Step 4: Special Features
+            formData.swimming_pool = document.getElementById('swimming_pool').value;
+            formData.pool_type = document.getElementById('pool_type').value;
+            formData.pool_depth = document.getElementById('pool_depth').value;
+            formData.pool_sqft = document.getElementById('pool_sqft').value;
+            formData.pool_liner = document.getElementById('pool_liner').value;
+            formData.pool_slide = document.getElementById('pool_slide').checked;
+            formData.pool_diving = document.getElementById('pool_diving').checked;
+            formData.trampoline = document.getElementById('trampoline').value;
+            formData.trampoline_fenced = document.getElementById('trampoline_fenced').value;
+            formData.yard_fenced = document.getElementById('yard_fenced').value;
+            formData.fence_type = document.getElementById('fence_type').value;
+            formData.animals = document.getElementById('animals').value;
+            formData.animal_type = document.getElementById('animal_type').value;
+            formData.vicious_tendencies = document.getElementById('vicious_tendencies').value;
+            formData.livestock = document.getElementById('livestock').value;
+            formData.livestock_count = document.getElementById('livestock_count').value;
+            formData.outbuildings = document.getElementById('outbuildings').value;
+
+            // Step 5: Systems & Updates
+            formData.alarm_fire = document.getElementById('alarm_fire').checked;
+            formData.alarm_burglar = document.getElementById('alarm_burglar').checked;
+            formData.alarm_local = document.getElementById('alarm_local').checked;
+            formData.alarm_central = document.getElementById('alarm_central').checked;
+            formData.protection_smoke = document.getElementById('protection_smoke').checked;
+            formData.protection_fire_ext = document.getElementById('protection_fire_ext').checked;
+            formData.protection_deadbolts = document.getElementById('protection_deadbolts').checked;
+            formData.fireplace = document.getElementById('fireplace').value;
+            formData.num_chimneys = document.getElementById('num_chimneys').value;
+            formData.chimney_cleaned = document.getElementById('chimney_cleaned').value;
+            formData.electric_update = document.getElementById('electric_update').value;
+            formData.electric_date = document.getElementById('electric_date').value;
+            formData.plumbing_update = document.getElementById('plumbing_update').value;
+            formData.plumbing_date = document.getElementById('plumbing_date').value;
+            formData.heat_update = document.getElementById('heat_update').value;
+            formData.heat_date = document.getElementById('heat_date').value;
+            formData.roof_update = document.getElementById('roof_update').value;
+            formData.roof_date = document.getElementById('roof_date').value;
+
+            // Step 6: Insurance & Coverage
+            formData.dwelling_limit = document.getElementById('dwelling_limit').value;
+            formData.med_pay = document.getElementById('med_pay').value;
+            formData.other_structure = document.getElementById('other_structure').value;
+            formData.personal_property = document.getElementById('personal_property').value;
+            formData.liability_limit = document.getElementById('liability_limit').value;
+            formData.current_deductible = document.getElementById('current_deductible').value;
+            formData.loss_of_use = document.getElementById('loss_of_use').value;
+            formData.insurance_company = document.getElementById('insurance_company').value;
+            formData.ins_policy_number = document.getElementById('ins_policy_number').value;
+            formData.ins_exp_date = document.getElementById('ins_exp_date').value;
+            formData.ins_premium = document.getElementById('ins_premium').value;
+            formData.ins_years_company = document.getElementById('ins_years_company').value;
+            formData.protection_class = document.getElementById('protection_class').value;
+
+            // Step 7: Mortgagee & History
+            formData.mortgagee_clause = document.getElementById('mortgagee_clause').value;
+            formData.mortgagee_name = document.getElementById('mortgagee_name').value;
+            formData.mortgagee_address = document.getElementById('mortgagee_address').value;
+            formData.mortgagee_city = document.getElementById('mortgagee_city').value;
+            formData.mortgagee_state = document.getElementById('mortgagee_state').value;
+            formData.mortgagee_zip = document.getElementById('mortgagee_zip').value;
+            formData.mortgagee_loan = document.getElementById('mortgagee_loan').value;
+            formData.escrow_account = document.getElementById('escrow_account').value;
+            formData.bill_mortgagee = document.getElementById('bill_mortgagee').value;
+            formData.bankruptcy_felony = document.getElementById('bankruptcy_felony').value;
+            formData.bankruptcy_details = document.getElementById('bankruptcy_details').value;
+            formData.losses_5yr = document.getElementById('losses_5yr').value;
+            formData.losses_details = document.getElementById('losses_details').value;
+            formData.business_use = document.getElementById('business_use').value;
+            formData.property_notes = document.getElementById('property_notes').value;
+        }
+
+        async function submitForm() {
+            saveFormData();
+            try {
+                const response = await fetch('submit_form.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentStep = totalSteps + 1;
+                    updateView();
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Error submitting form: ' + e);
+            }
+        }
+
+        updateView();
+    </script>
+</body>
+</html>

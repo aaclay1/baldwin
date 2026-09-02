@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baldwin Insurance - Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* LOGIN PAGE STYLES */
+        .login-page {
+            background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .login-header img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .login-box {
+            padding: 40px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #A61F1F;
+            box-shadow: 0 0 0 3px rgba(166, 31, 31, 0.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #8B0000 0%, #A61F1F 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.4);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error {
+            color: #721c24;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success.show {
+            display: block;
+        }
+        
+        .login-footer {
+            background: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #eee;
+        }
+        
+        /* DASHBOARD STYLES */
+        .dashboard-page {
+            display: none;
+        }
+        
+        .dashboard-page.active {
+            display: block;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+        }
+        
+        .logout-btn {
+            background: #A61F1F;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .logout-btn:hover {
+            background: #8B0000;
+        }
+        
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .toolbar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: #A61F1F;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #8B0000;
+        }
+        
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .submissions-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .submissions-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .submissions-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .submissions-table .view-btn {
+            background: #A61F1F;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .submissions-table .view-btn:hover {
+            background: #8B0000;
+        }
+        
+        .submissions-table .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .submissions-table .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal.show {
+            display: block;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 5px;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: #000;
+        }
+        
+        .modal-content h2 {
+            color: #8B0000;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #A61F1F;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="baldwin-logo.png" alt="Baldwin Insurance">
+                <h1>Baldwin Insurance</h1>
+                <p>Admin Portal</p>
+            </div>
+            
+            <div class="login-box">
+                <div class="error" id="errorMsg"></div>
+                
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" placeholder="Enter username" required autofocus>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                    </div>
+                    
+                    <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+                </form>
+            </div>
+            
+            <div class="login-footer">
+                <p>Admin Portal Access Only</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage" class="dashboard-page">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+        
+        <div class="content">
+            <div class="success" id="successMsg"></div>
+            <div class="error" id="dashErrorMsg"></div>
+            
+            <div class="toolbar">
+                <button class="btn" onclick="loadSubmissions()">Refresh</button>
+                <button class="btn" onclick="openInviteModal()">Create Invitation</button>
+                <button class="btn" onclick="exportData()">Export CSV</button>
+            </div>
+            
+            <div id="submissionsList" class="loading">Loading...</div>
+        </div>
+    </div>
+    
+    <!-- INVITE MODAL -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeInviteModal()">&times;</span>
+            <h2>Create Invitation</h2>
+            
+            <form id="inviteForm" onsubmit="handleCreateInvite(event)">
+                <div class="form-group">
+                    <label for="inviteName">Name:</label>
+                    <input type="text" id="inviteName" placeholder="Customer name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inviteEmail">Email:</label>
+                    <input type="email" id="inviteEmail" placeholder="customer@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="invitePhone">Phone:</label>
+                    <input type="tel" id="invitePhone" placeholder="(123) 456-7890">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inviteFormType">Form Type:</label>
+                    <select id="inviteFormType" required>
+                        <option value="">-- Select Form --</option>
+                        <option value="customer">Customer Information</option>
+                        <option value="property">Property Information</option>
+                    </select>
+                </div>
+                
+                <div class="error" id="inviteErrorMsg"></div>
+                <div class="success" id="inviteSuccessMsg"></div>
+                
+                <button type="submit" class="btn" id="inviteSubmitBtn" style="width: 100%; margin-top: 20px;">Send Invitation</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- DETAIL MODAL -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            
+            try {
+                const response = await fetch('admin_login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboardPage').classList.add('active');
+                    loadSubmissions();
+                } else {
+                    errorMsg.textContent = data.message || 'Invalid credentials';
+                    errorMsg.classList.add('show');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In';
+                }
+            } catch (e) {
+                errorMsg.textContent = 'Login error: ' + e;
+                errorMsg.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        }
+        
+        async function loadSubmissions() {
+            const list = document.getElementById('submissionsList');
+            list.innerHTML = '<div class="loading">Loading submissions...</div>';
+            
+            try {
+                const response = await fetch('admin_api.php?action=get_submissions');
+                const data = await response.json();
+                
+                if (!data.submissions || data.submissions.length === 0) {
+                    list.innerHTML = '<p style="text-align: center; padding: 40px;">No submissions yet.</p>';
+                    return;
+                }
+                
+                let html = '<table class="submissions-table"><thead><tr><th>Form Type</th><th>Invitee Name</th><th>Invitee Email</th><th>Invitee Phone</th><th>Submitted</th><th>Actions</th></tr></thead><tbody>';
+                
+                data.submissions.forEach(sub => {
+                    const formType = sub.form_type || 'Unknown';
+                    const inviteName = sub.invite_name || '-';
+                    const inviteEmail = sub.invite_email || '-';
+                    const invitePhone = sub.invite_phone || '-';
+                    const submittedAt = sub.submitted_at || '-';
+                    
+                    html += `<tr>
+                        <td>${formType}</td>
+                        <td>${inviteName}</td>
+                        <td>${inviteEmail}</td>
+                        <td>${invitePhone}</td>
+                        <td>${submittedAt}</td>
+                        <td>
+                            <button class="view-btn" onclick="viewSubmission(${sub.id})">View</button>
+                            <button class="delete-btn" onclick="deleteSubmission(${sub.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                
+                html += '</tbody></table>';
+                list.innerHTML = html;
+                
+            } catch (e) {
+                list.innerHTML = '<p style="color: red;">Error loading submissions: ' + e + '</p>';
+            }
+        }
+        
+        async function viewSubmission(id) {
+            try {
+                const response = await fetch('admin_api.php?action=get_submission&id=' + id);
+                const data = await response.json();
+                const sub = data.submission;
+                
+                let html = '<h2>Submission Details - ID: ' + sub.id + '</h2>';
+                html += '<table style="width:100%; border-collapse: collapse;">';
+                
+                // Show all form data from JSON
+                if (sub.form_data) {
+                    let formData = sub.form_data;
+                    // Only parse if it's a string
+                    if (typeof formData === 'string') {
+                        try {
+                            formData = JSON.parse(formData);
+                        } catch (e) {
+                            formData = {};
+                        }
+                    }
+                    
+                    for (const [key, value] of Object.entries(formData)) {
+                        const displayValue = typeof value === 'object' ? JSON.stringify(value) : (value || '-');
+                        html += `<tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px; font-weight: bold; width: 200px;">${key}:</td>
+                            <td style="padding: 10px; word-break: break-word;">${displayValue}</td>
+                        </tr>`;
+                    }
+                    
+                    // Show raw JSON
+                    const jsonStr = typeof sub.form_data === 'string' ? sub.form_data : JSON.stringify(sub.form_data, null, 2);
+                    html += '</table>';
+                    html += '<p style="margin-top: 20px; font-size: 12px; color: #666;">Raw JSON:<br><code style="background: #f5f5f5; padding: 10px; display: block; overflow-x: auto;">' + jsonStr.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></p>';
+                } else {
+                    html += '</table>';
+                    html += '<p style="margin-top: 20px; color: #999;">No form data captured.</p>';
+                }
+                
+                document.getElementById('modalContent').innerHTML = html;
+                document.getElementById('detailModal').classList.add('show');
+                
+            } catch (e) {
+                alert('Error loading submission: ' + e);
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+        
+        async function deleteSubmission(id) {
+            if (confirm('Are you sure you want to delete this submission? This cannot be undone.')) {
+                try {
+                    const response = await fetch('admin_api.php?action=delete&id=' + id);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert('Submission deleted successfully');
+                        loadSubmissions(); // Reload the list
+                    } else {
+                        alert('Error deleting submission: ' + (data.error || 'Unknown error'));
+                    }
+                } catch (e) {
+                    alert('Error deleting submission: ' + e);
+                }
+            }
+        }
+        
+        function openInviteModal() {
+            document.getElementById('inviteForm').reset();
+            document.getElementById('inviteErrorMsg').classList.remove('show');
+            document.getElementById('inviteSuccessMsg').classList.remove('show');
+            document.getElementById('inviteModal').classList.add('show');
+        }
+        
+        function closeInviteModal() {
+            document.getElementById('inviteModal').classList.remove('show');
+        }
+        
+        async function handleCreateInvite(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('inviteName').value;
+            const email = document.getElementById('inviteEmail').value;
+            const phone = document.getElementById('invitePhone').value;
+            const formType = document.getElementById('inviteFormType').value;
+            const submitBtn = document.getElementById('inviteSubmitBtn');
+            const errorMsg = document.getElementById('inviteErrorMsg');
+            const successMsg = document.getElementById('inviteSuccessMsg');
+            
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+            
+            if (!name || !formType) {
+                errorMsg.textContent = 'Name and Form Type are required';
+                errorMsg.classList.add('show');
+                return;
+            }
+            
+            if (!email && !phone) {
+                errorMsg.textContent = 'Please provide either an email or phone number';
+                errorMsg.classList.add('show');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch('create_invitation.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, form_type: formType })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    successMsg.textContent = 'Invitation sent successfully! ' + (email ? 'Email sent to ' + email : 'SMS sent to ' + phone);
+                    successMsg.classList.add('show');
+                    setTimeout(() => {
+                        closeInviteModal();
+                    }, 2000);
+                } else {
+                    errorMsg.textContent = data.message || 'Error creating invitation';
+                    errorMsg.classList.add('show');
+                }
+            } catch (e) {
+                errorMsg.textContent = 'Error: ' + e;
+                errorMsg.classList.add('show');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Invitation';
+            }
+        }
+        
+        async function handleLogout() {
+            try {
+                await fetch('admin_api.php?action=logout');
+                document.getElementById('dashboardPage').classList.remove('active');
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('loginForm').reset();
+            } catch (error) {
+                alert('Logout error: ' + error);
+            }
+        }
+        
+        async function exportData() {
+            window.location.href = 'admin_api.php?action=export_csv';
+        }
+        
+        // Check session on page load
+        async function checkSessionAndInit() {
+            try {
+                const response = await fetch('check_session.php');
+                const data = await response.json();
+                
+                if (data.logged_in) {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboardPage').classList.add('active');
+                    loadSubmissions();
+                } else {
+                    document.getElementById('loginPage').style.display = 'flex';
+                    document.getElementById('dashboardPage').classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Session check error:', error);
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('dashboardPage').classList.remove('active');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', checkSessionAndInit);
+        
+        window.onclick = function(event) {
+            const inviteModal = document.getElementById('inviteModal');
+            const detailModal = document.getElementById('detailModal');
+            if (event.target == inviteModal) {
+                inviteModal.classList.remove('show');
+            }
+            if (event.target == detailModal) {
+                detailModal.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
